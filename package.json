@@ -1,0 +1,46 @@
+{
+  "name": "hds-observability-js",
+  "version": "0.1.0",
+  "description": "Allow-list telemetry emitter for HDS services: aggregate metrics and error counts over OTLP, with no vendor agent and no free-text field.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./src/*": "./src/*",
+    "./dist/*": "./dist/*"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "test": "NODE_ENV=test node node_modules/mocha/bin/mocha.js 'tests/**/*.test.ts' --test-reporter=spec",
+    "test:coverage": "NODE_ENV=test c8 node node_modules/mocha/bin/mocha.js 'tests/**/*.test.ts'",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:change": "eslint $(git diff --name-only HEAD | grep -E '\\.(ts|tsx)$' | xargs)",
+    "typecheck": "tsc --noEmit",
+    "setup": "npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/healthdatasafe/hds-observability-js.git"
+  },
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.5.5",
+    "c8": "^9.1.0",
+    "eslint": "^9.0.0",
+    "mocha": "^10.7.3",
+    "neostandard": "^0.12.0",
+    "typescript": "^5.9.3"
+  }
+}
