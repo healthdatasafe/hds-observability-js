@@ -6,6 +6,28 @@ carry**, not what our own objects contain — because a control that is present 
 configuration and inert in practice passes the second kind of test and fails the
 first. That has happened twice in this ecosystem, so it is the standard here.
 
+**`tests/sweep.test.ts` goes one level further, and the distinction matters.**
+`fences.test.ts` captures `Window` objects from an in-memory exporter and asserts
+against `buildPayload` — which is still asserting *our own objects*, and never
+exercises `otlpExporter`. The sweep drives the real exporter at a real socket and
+asserts **the bytes that actually left the process**. That is the only layer where
+a payload could acquire something on the way out, and until 2026-07-29 nothing
+tested it.
+
+That distinction was not academic. Running the sweep found **two defects this
+suite had passed** (both fixed in 0.2.0, both also caught by pryv's own
+post-deploy verification of their equivalent emitter):
+
+- an **empty allow-list** was accepted, producing an emitter that refuses every
+  datapoint and reports itself instrumented — the six-week-inert shape;
+- a refusal named the offending value **nowhere at all**, making a rising
+  `unknown_method` counter undiagnosable.
+
+If you change this library, re-run the sweep — and re-run it end-to-end against a
+real collector (`_local/scripts/obs/sweep-against-collector.ts` in the `_macro`
+workspace), because the in-process half cannot see what the collector's own
+processors do to the payload.
+
 | # | Fence | Enforced by | Test |
 |---|---|---|---|
 | 1 | Every value that can reach an exporter is a compile-time constant, a closed-enum member, or a number. The API has no free-text parameter. | `ObservabilityOptions.methods` / `errorCodes` are the allow-list; `recordCall`/`recordError` accept only their union members | *every string on the wire is a registered constant*; *probe sweep* |
@@ -16,7 +38,11 @@ first. That has happened twice in this ecosystem, so it is the standard here.
 | 6 | Windows cannot be shortened toward per-event reporting. | `MIN_WINDOW_MS` floor | *refuses a window shorter than the floor* |
 | 7 | The resource carries exactly three attributes and nothing is detected. | `otlp.ts` builds the resource from `ServiceIdentity` only | *emits exactly three resource attributes* |
 | 8 | Service identity cannot smuggle a runtime value. | `SERVICE_FIELD_RE` validation at construction | *refuses a service identity that could carry a runtime value* |
-| 9 | Telemetry failure never propagates to the caller. | `flush` catches; refusals return rather than throw | *(structural)* |
+| 9 | Telemetry failure never propagates to the caller. | `flush` catches; refusals return rather than throw; a throwing `onRefused` is caught | *(structural)* |
+| 10 | An emitter that would refuse everything cannot be constructed. | empty `methods` / `errorCodes` throw at construction | *#1 an empty vocabulary is a LOUD refusal* |
+| 11 | Every refusal names its offending value somewhere an operator can reach — locally, never on the wire. | `onRefused(reason, value)`; omitting it warns once | *#2 a refusal names the offending value*; *#2b omitting the sink warns ONCE* |
+| 12 | Auth headers never appear in the payload body. | `otlpExporter` puts them in `fetch` headers only | *the auth header does not bleed into the body* |
+| 13 | The attribute inventory is exactly seven keys, enumerated rather than spot-checked. | `otlp.ts` `attrs()` call sites | *enumerates the attribute inventory* |
 
 ## Deliberate consequences
 
