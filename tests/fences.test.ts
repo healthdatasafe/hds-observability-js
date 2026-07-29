@@ -25,6 +25,10 @@ function harness (opts: { minCellCount?: number } = {}) {
     errorCodes: CODES,
     exporter,
     minCellCount: opts.minCellCount ?? 5,
+    // These tests refuse payloads deliberately. A sink keeps the "no sink
+    // configured" warning out of the output — noisy output is how real
+    // warnings get ignored. The warning itself is covered in `sweep.test.ts`.
+    onRefused: () => {},
     now: () => clock,
     setInterval: (() => ({ unref () {} })) as unknown as typeof setInterval
   });
@@ -91,7 +95,7 @@ describe('fence: no free-text can reach the wire', () => {
       'hds.calls', 'hds.call.duration', 'hds.errors', 'hds.telemetry.dropped',
       'method', 'status_class', 'code', 'reason', '1', 'ms',
       'service.name', 'service.version', 'service.instance.id',
-      'hds-observability-js', '0.1.0'
+      'hds-observability-js', '0.2.0'
     ]);
     for (const w of sent) {
       for (const s of stringValues(buildPayload(w, SERVICE))) {

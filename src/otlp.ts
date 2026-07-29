@@ -22,7 +22,10 @@ import {
  */
 
 const DELTA = 1; // AggregationTemporality.DELTA — windowed counts, not cumulative.
-const SCOPE = { name: 'hds-observability-js', version: '0.1.0' };
+// Instrumentation scope. Keep `version` in step with package.json — it is the
+// only signal at the backend of which emitter build produced a window, which is
+// what makes "re-run the sweep on each library release" (fence 13) checkable.
+const SCOPE = { name: 'hds-observability-js', version: '0.2.0' };
 
 interface KeyValue { key: string; value: { stringValue: string } }
 
