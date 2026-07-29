@@ -1,6 +1,6 @@
 {
   "name": "hds-observability-js",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Allow-list telemetry emitter for HDS services: aggregate metrics and error counts over OTLP, with no vendor agent and no free-text field.",
   "type": "module",
   "engines": {
@@ -10,8 +10,8 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "default": "./dist/index.js"
     },
