@@ -218,7 +218,7 @@ describe('D: payload sweep over the real transport', () => {
         'hds.calls', 'hds.call.duration', 'hds.errors', 'hds.telemetry.dropped',
         'method', 'status_class', 'code', 'reason', '1', 'ms',
         'service.name', 'service.version', 'service.instance.id',
-        'hds-observability-js', '0.2.0'
+        'hds-observability-js', '0.2.2'
       ]);
       const strings: string[] = [];
       const walk = (n: unknown): void => {

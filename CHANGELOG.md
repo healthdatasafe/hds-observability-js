@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.2] — 2026-09-29
+
+### Fixed — the emitted instrumentation scope version
+
+`src/otlp.ts` still reported scope version `0.2.0` after the 0.2.1 release, so the
+backend could not tell which emitter build produced a window (the check fence 13
+relies on). It now reports `0.2.2`, matching `package.json`.
+
+## [0.2.1]
+
+### Changed — `exports` resolve to the built `dist/` (types + import), not the `.ts` source
+
 ## [0.2.0] — 2026-07-29
 
 Plan 88 workstream D. Two defects found by **verifying against a running
