@@ -28,26 +28,3 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 SPDX-License-Identifier: BSD-3-Clause
-
----
-
-NOTE on vendored Pryv content
-
-`vendor/pryv/` is a snapshot of https://github.com/pryv/hds-observability-js
-(© Pryv, BSD-3-Clause). Its original license is preserved at
-`vendor/pryv/LICENSE` and governs that directory.
-
-NOTE on regulation reference materials
-
-Regulation, standard and certification reference materials cited anywhere in
-this repository (URLs, version pins, paraphrased clause IDs) are NOT covered by
-this license. They remain the property of their respective authors (EU
-institutions, US federal government, ISO, AFNOR, esante.gouv.fr, etc.).
-
-ISO/IEC standards (27001, 27701, 13485) are paywalled — the full text is NOT
-included in this repository.
-
-NOTE on agreement templates
-
-Templates under `templates/` are provided as engineering/operational guidance,
-NOT legal advice. Review with qualified counsel before use.
