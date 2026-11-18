@@ -95,6 +95,6 @@ npm run typecheck
 npm run lint
 ```
 
-## Licence
+## License
 
-BSD-3-Clause.
+[BSD-3-Clause](LICENSE)
